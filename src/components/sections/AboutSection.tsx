@@ -57,7 +57,7 @@ export function AboutSection() {
               className="absolute top-0 right-0 w-[85%] h-[78%] overflow-hidden"
             >
               <Image
-                src="/images/recpection"
+                src="/sky/images/recpection"
                 alt="Hotel Sky Palace Reception"
                 fill
                 className="object-cover"
@@ -74,7 +74,7 @@ export function AboutSection() {
               className="absolute bottom-0 left-0 w-[52%] h-[45%] overflow-hidden border-4 border-[#0A0F0D] shadow-luxury"
             >
               <Image
-                src="/images/waiting area"
+                src="/sky/images/waiting area"
                 alt="Hotel Sky Palace waiting area"
                 fill
                 className="object-cover"

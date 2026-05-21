@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     siteName: "Hotel Sky Palace",
     images: [
       {
-        url: "/images/hotel/hotel_31.jpeg",
+        url: "/sky/images/hotel/hotel_31.jpeg",
         width: 1200,
         height: 630,
         alt: "Hotel Sky Palace — Luxury Airport Hotel, Shamshabad Hyderabad",

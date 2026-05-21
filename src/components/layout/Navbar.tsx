@@ -54,7 +54,7 @@ export function Navbar() {
           <Link href="/" className="flex items-center gap-4 shrink-0 group">
             <div className="relative w-10 h-10 overflow-hidden rounded-full border border-[#D4AF37]/30 group-hover:border-[#D4AF37]/80 transition-colors duration-500 shadow-gold-glow">
               <Image
-                src="/images/logo.png"
+                src="/sky/images/logo.png"
                 alt="Hotel Sky Palace Logo"
                 fill
                 className="object-cover scale-110"

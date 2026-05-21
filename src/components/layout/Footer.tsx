@@ -19,7 +19,7 @@ export function Footer() {
           <div className="lg:col-span-1">
             <div className="flex items-center gap-3 mb-6">
               <div className="relative w-9 h-9 overflow-hidden rounded-full border border-[#C9A84C]/20">
-                <Image src="/images/logo.png" alt="Hotel Sky Palace Logo" fill className="object-cover scale-110" />
+                <Image src="/sky/images/logo.png" alt="Hotel Sky Palace Logo" fill className="object-cover scale-110" />
               </div>
               <div>
                 <p className="text-[0.8rem] font-medium tracking-[0.12em] uppercase text-white">Hotel Sky Palace</p>

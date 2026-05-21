@@ -80,7 +80,7 @@ export function HeroSection() {
         transition={{ duration: 40, repeat: Infinity, repeatType: "mirror", ease: "linear" }}
       >
         <Image
-          src="/images/hotel/hotel_31.jpeg"
+          src="/sky/images/hotel/hotel_31.jpeg"
           alt="Hotel Sky Palace Luxury Room"
           fill
           priority

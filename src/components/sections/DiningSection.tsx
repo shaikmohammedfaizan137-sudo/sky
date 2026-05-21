@@ -69,7 +69,7 @@ export function DiningSection() {
               <div className="relative" style={{ aspectRatio: "4/5", maxHeight: "600px" }}>
                 <div className="relative h-full rounded-sm overflow-hidden shadow-luxury">
                   <Image
-                    src="/images/hotel/hotel_29.jpeg"
+                    src="/sky/images/hotel/hotel_29.jpeg"
                     alt="Manu's Indian Spices restaurant at Hotel Sky Palace — multi-cuisine dining, Shamshabad Hyderabad"
                     fill sizes="(max-width:1024px) 100vw, 50vw"
                     className="object-cover object-center"
@@ -83,7 +83,7 @@ export function DiningSection() {
                   className="absolute -left-4 md:-left-7 -bottom-4 md:-bottom-7 w-40 h-40 md:w-48 md:h-48 rounded-sm overflow-hidden border-4 border-oak-black shadow-luxury"
                 >
                   <Image
-                    src="/images/hotel/hotel_30.jpeg"
+                    src="/sky/images/hotel/hotel_30.jpeg"
                     alt="Hotel Sky Palace restaurant interior"
                     fill sizes="200px"
                     className="object-cover object-center"

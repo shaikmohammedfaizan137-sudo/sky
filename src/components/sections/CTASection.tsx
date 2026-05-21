@@ -23,7 +23,7 @@ export function CTASection() {
       {/* Background */}
       <div className="absolute inset-0">
         <Image
-          src="/images/hotel/hotel_27.jpeg"
+          src="/sky/images/hotel/hotel_27.jpeg"
           alt="Hotel Sky Palace — Book Your Stay"
           fill
           sizes="100vw"
