@@ -74,8 +74,8 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <Mail size={14} className="text-[#C9A84C] shrink-0" />
-                <a href="mailto:reservations@hotelskypalace.com" className="text-[0.78rem] text-white/40 hover:text-white transition-colors font-inter">
-                  reservations@hotelskypalace.com
+                <a href="mailto:hotelskypalacehyd@gmail.com" className="text-[0.78rem] text-white/40 hover:text-white transition-colors font-inter">
+                  hotelskypalacehyd@gmail.com
                 </a>
               </li>
             </ul>
