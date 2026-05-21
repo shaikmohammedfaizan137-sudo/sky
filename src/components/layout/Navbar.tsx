@@ -62,7 +62,7 @@ export function Navbar() {
             </div>
             <div className="flex flex-col">
               <span className="font-playfair text-[1.1rem] tracking-[0.15em] uppercase text-white leading-tight">Hotel Sky Palace</span>
-              <span className="text-[0.55rem] tracking-[0.25em] text-[#D4AF37] uppercase font-inter">Aman Inspired</span>
+              <span className="text-[0.55rem] tracking-[0.25em] text-[#D4AF37] uppercase font-inter">Elevated Luxury</span>
             </div>
           </Link>
 
