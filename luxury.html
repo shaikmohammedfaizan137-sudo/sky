@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Sky Palace — Budget Luxury Stay</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP & Lenis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            900: '#020A14',
+                            800: '#071020',
+                            700: '#0D2035'
+                        },
+                        gold: {
+                            DEFAULT: '#C8A24D',
+                            light: '#E2C06A',
+                            dim: 'rgba(200, 162, 77, 0.15)'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['Montserrat', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #020A14;
+            color: #F5F0E8;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background: #C8A24D;
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease;
+        }
+        .cursor-ring {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(200, 162, 77, 0.4);
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease, background 0.3s ease;
+        }
+        .hovering .cursor-ring {
+            width: 60px;
+            height: 60px;
+            background: rgba(200, 162, 77, 0.1);
+        }
+
+        /* Glassmorphism */
+        .glass {
+            background: rgba(7, 16, 32, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(200, 162, 77, 0.2);
+        }
+
+        /* Premium hover */
+        .gold-btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        .gold-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: #E2C06A;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+            z-index: 0;
+        }
+        .gold-btn:hover::before {
+            transform: scaleX(1);
+        }
+        .gold-btn:hover {
+            box-shadow: 0 10px 30px rgba(200, 162, 77, 0.3);
+            transform: translateY(-2px);
+        }
+        .gold-btn > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .img-hover {
+            transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .card:hover .img-hover {
+            transform: scale(1.05);
+        }
+
+        /* Text gradient */
+        .text-gold-gradient {
+            background: linear-gradient(to right, #E2C06A, #C8A24D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        /* Hero Enhancements */
+        @keyframes subtle-zoom {
+            0% { transform: scale(1.0); }
+            50% { transform: scale(1.06); }
+            100% { transform: scale(1.0); }
+        }
+        .hero-bg-zoom {
+            animation: subtle-zoom 20s ease-in-out infinite;
+            will-change: transform;
+        }
+        .text-glow {
+            text-shadow: 0 0 60px rgba(200, 162, 77, 0.5), 0 0 120px rgba(200, 162, 77, 0.15);
+        }
+        .glass-gold-border {
+            background: rgba(2, 10, 20, 0.55);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(200, 162, 77, 0.35);
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(200, 162, 77, 0.1);
+        }
+        @keyframes scrollDown {
+            0% { transform: translateY(-100%); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(200%); opacity: 0; }
+        }
+        .stat-divider {
+            width: 1px;
+            height: 36px;
+            background: rgba(200, 162, 77, 0.25);
+        }
+        .hero-badge {
+            border: 1px solid rgba(200, 162, 77, 0.3);
+            background: rgba(200, 162, 77, 0.06);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-gold selection:text-navy-900">
+
+    <!-- Cursor -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-ring" id="cursor-ring"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-500 py-6 px-12" id="navbar">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="#" class="flex items-center gap-3 group">
+                <!-- Sky Group of Hotels Logo: 5-arch building icon -->
+                <svg width="44" height="52" viewBox="0 0 110 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="transition-transform duration-500 group-hover:scale-105 flex-shrink-0">
+                    <!-- Outer left arch -->
+                    <path d="M10 100 L10 68 Q10 18 35 10" stroke="#C8A24D" stroke-width="5" stroke-linecap="round" fill="none"/>
+                    <!-- Inner left arch -->
+                    <path d="M26 100 L26 72 Q26 28 42 14" stroke="#C8A24D" stroke-width="5" stroke-linecap="round" fill="none"/>
+                    <!-- Centre arch (tallest) -->
+                    <path d="M42 100 L42 76 Q42 6 55 4 Q68 6 68 76 L68 100" stroke="#C8A24D" stroke-width="5.5" stroke-linecap="round" fill="none"/>
+                    <!-- Inner right arch -->
+                    <path d="M84 100 L84 72 Q84 28 68 14" stroke="#C8A24D" stroke-width="5" stroke-linecap="round" fill="none"/>
+                    <!-- Outer right arch -->
+                    <path d="M100 100 L100 68 Q100 18 75 10" stroke="#C8A24D" stroke-width="5" stroke-linecap="round" fill="none"/>
+                </svg>
+                <div class="flex flex-col leading-tight">
+                    <span class="font-sans font-bold text-white text-sm tracking-[0.12em] uppercase">Hotel Sky Palace</span>
+                    <span class="text-[9px] text-gold tracking-[0.35em] uppercase mt-0.5">Budget Luxury Stay</span>
+                </div>
+            </a>
+            
+            <div class="hidden lg:flex gap-10 items-center">
+                <a href="#rooms" class="text-xs tracking-[0.2em] uppercase hover:text-gold transition-colors relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-0 after:h-px after:bg-gold hover:after:w-full after:transition-all after:duration-300">Rooms</a>
+                <a href="#amenities" class="text-xs tracking-[0.2em] uppercase hover:text-gold transition-colors relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-0 after:h-px after:bg-gold hover:after:w-full after:transition-all after:duration-300">Amenities</a>
+                <a href="#gallery" class="text-xs tracking-[0.2em] uppercase hover:text-gold transition-colors relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-0 after:h-px after:bg-gold hover:after:w-full after:transition-all after:duration-300">Gallery</a>
+                <a href="#contact" class="text-xs tracking-[0.2em] uppercase hover:text-gold transition-colors relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-0 after:h-px after:bg-gold hover:after:w-full after:transition-all after:duration-300">Contact</a>
+                <button class="gold-btn bg-gold text-navy-900 px-8 py-3 text-xs tracking-[0.2em] uppercase font-medium">
+                    <span>Book Now</span>
+                </button>
+            </div>
+        </div>
+    </nav>    <!-- Hero Section -->
+    <header class="relative h-screen min-h-[700px] flex flex-col justify-between">
+
+        <!-- Cinematic Background -->
+        <div class="absolute inset-0 z-0 overflow-hidden">
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1542314831-c6a420325142?q=80&w=2560&auto=format&fit=crop')] bg-cover bg-center hero-bg-zoom" id="hero-bg"></div>
+            <!-- Multi-layer depth overlay -->
+            <div class="absolute inset-0 bg-navy-900/70"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-navy-900/80 via-navy-900/30 to-navy-900/60"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-navy-900/60 via-transparent to-navy-900"></div>
+            <!-- Warm gold ambient glow from center -->
+            <div class="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_50%,rgba(200,162,77,0.08)_0%,transparent_70%)]"></div>
+            <!-- Noise texture -->
+            <div class="absolute inset-0 opacity-[0.03]" style="background-image: url('https://www.transparenttextures.com/patterns/noise.png');"></div>
+        </div>
+
+        <!-- Top spacer for nav -->
+        <div class="relative z-10 pt-28"></div>
+
+        <!-- Hero Main Content -->
+        <div class="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-6 pb-8">
+
+            <!-- Location badge -->
+            <div class="hero-badge inline-flex items-center gap-3 px-5 py-2 rounded-full mb-8 fade-up">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" class="text-gold"><circle cx="5" cy="5" r="5"/></svg>
+                <span class="text-[10px] text-gold tracking-[0.5em] uppercase">Shamshabad &bull; Hyderabad &bull; Near RGIA Airport</span>
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" class="text-gold"><circle cx="5" cy="5" r="5"/></svg>
+            </div>
+
+            <!-- Main Headline -->
+            <h1 class="font-serif font-light leading-[1.05] mb-6 fade-up" style="font-size: clamp(3rem, 8vw, 7.5rem); delay-100">
+                Experience Luxury
+                <span class="block italic text-gold text-glow" style="font-size: clamp(3rem, 8.5vw, 8rem);">Beyond Imagination</span>
+            </h1>
+
+            <!-- Decorative divider -->
+            <div class="flex items-center gap-6 mb-6 fade-up delay-200">
+                <div class="h-px flex-1 max-w-[80px] bg-gradient-to-r from-transparent to-gold/50"></div>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" class="text-gold/60"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <div class="h-px flex-1 max-w-[80px] bg-gradient-to-l from-transparent to-gold/50"></div>
+            </div>
+
+            <!-- Subheading -->
+            <p class="text-white/60 max-w-xl mx-auto mb-8 fade-up delay-300 leading-relaxed" style="font-size: clamp(0.75rem, 1.2vw, 0.875rem); letter-spacing: 0.12em;">
+                A premium airport hotel in Shamshabad, Hyderabad — offering world-class comfort,
+                elegant rooms, and seamless connectivity to RGIA.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-wrap justify-center gap-5 mb-10 fade-up delay-500">
+                <!-- Primary: Gold filled, slim -->
+                <button class="gold-btn bg-gold text-navy-900 px-12 py-3.5 text-[10px] tracking-[0.35em] uppercase font-bold rounded-sm shadow-[0_0_35px_rgba(200,162,77,0.4)] flex items-center gap-3">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    <span>Book Your Stay</span>
+                </button>
+                <!-- Secondary: Ghost, slim -->
+                <button class="border border-gold/40 hover:border-gold text-gold/70 hover:text-gold hover:bg-gold/5 px-12 py-3.5 text-[10px] tracking-[0.35em] uppercase transition-all duration-400 rounded-sm flex items-center gap-3">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    Explore Rooms
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Scroll cue -->
+        <div class="relative z-10 flex flex-col items-center pb-6">
+            <div class="w-px h-10 overflow-hidden relative bg-white/10">
+                <div class="absolute top-0 left-0 w-full h-1/2 bg-gold" style="animation: scrollDown 2s ease-in-out infinite;"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Stats Bar -->
+    <div class="bg-navy-800 border-y border-gold/15">
+        <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 divide-x divide-gold/15">
+            <div class="py-10 px-6 text-center">
+                <p class="font-serif text-gold text-5xl font-light leading-none mb-2">3</p>
+                <p class="text-[10px] text-white/50 tracking-[0.3em] uppercase">Room Types</p>
+            </div>
+            <div class="py-10 px-6 text-center">
+                <p class="font-serif text-gold text-5xl font-light leading-none mb-2">5</p>
+                <p class="text-[10px] text-white/50 tracking-[0.3em] uppercase">Min to RGIA</p>
+            </div>
+            <div class="py-10 px-6 text-center border-t border-gold/15 md:border-t-0">
+                <p class="font-serif text-gold text-5xl font-light leading-none mb-2">24/7</p>
+                <p class="text-[10px] text-white/50 tracking-[0.3em] uppercase">Front Desk</p>
+            </div>
+            <div class="py-10 px-6 text-center border-t border-gold/15 md:border-t-0">
+                <p class="font-serif text-gold text-5xl font-light leading-none mb-2">Free</p>
+                <p class="text-[10px] text-white/50 tracking-[0.3em] uppercase">WiFi &amp; Parking</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Luxury Rooms Section -->
+    <section id="rooms" class="py-32 px-6 relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-24 section-header">
+                <p class="text-gold text-xs tracking-[0.4em] uppercase mb-4">Accommodations</p>
+                <h2 class="font-serif text-4xl md:text-6xl font-light">Refined <span class="italic text-gold">Sanctuaries</span></h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Room 1 -->
+                <div class="card group cursor-pointer">
+                    <div class="relative h-[450px] overflow-hidden rounded-t-xl">
+                        <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover img-hover" alt="Queen Room">
+                        <div class="absolute inset-0 bg-gradient-to-t from-navy-900 via-transparent to-transparent opacity-80"></div>
+                        <div class="absolute bottom-6 left-6">
+                            <h3 class="font-serif text-3xl mb-2 group-hover:text-gold transition-colors">Deluxe Room</h3>
+                            <p class="text-xs text-gray-400 tracking-wider">160 m² • City View • Up to 2 Guests</p>
+                        </div>
+                    </div>
+                    <div class="glass p-6 rounded-b-xl border-t-0 flex justify-between items-end">
+                        <div>
+                            <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-1">From</p>
+                            <p class="font-serif text-2xl text-gold">₹3,999 <span class="text-sm text-white/50 font-sans">/night</span></p>
+                        </div>
+                        <button class="text-xs tracking-[0.2em] uppercase text-white hover:text-gold transition-colors border-b border-transparent hover:border-gold pb-1">
+                            Explore
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Room 2 -->
+                <div class="card group cursor-pointer -translate-y-4">
+                    <div class="relative h-[450px] overflow-hidden rounded-t-xl">
+                        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover img-hover" alt="Deluxe Room">
+                        <div class="absolute inset-0 bg-gradient-to-t from-navy-900 via-transparent to-transparent opacity-80"></div>
+                        <div class="absolute top-6 right-6 bg-gold text-navy-900 text-[10px] tracking-widest uppercase px-3 py-1 font-medium">Most Popular</div>
+                        <div class="absolute bottom-6 left-6">
+                            <h3 class="font-serif text-3xl mb-2 group-hover:text-gold transition-colors">Executive Room</h3>
+                            <p class="text-xs text-gray-400 tracking-wider">210 m² • King Bed • Up to 3 Guests</p>
+                        </div>
+                    </div>
+                    <div class="glass p-6 rounded-b-xl border-t-0 flex justify-between items-end">
+                        <div>
+                            <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-1">From</p>
+                            <p class="font-serif text-2xl text-gold">₹5,999 <span class="text-sm text-white/50 font-sans">/night</span></p>
+                        </div>
+                        <button class="text-xs tracking-[0.2em] uppercase text-white hover:text-gold transition-colors border-b border-transparent hover:border-gold pb-1">
+                            Explore
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Room 3 -->
+                <div class="card group cursor-pointer">
+                    <div class="relative h-[450px] overflow-hidden rounded-t-xl">
+                        <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover img-hover" alt="Superior Suite">
+                        <div class="absolute inset-0 bg-gradient-to-t from-navy-900 via-transparent to-transparent opacity-80"></div>
+                        <div class="absolute bottom-6 left-6">
+                            <h3 class="font-serif text-3xl mb-2 group-hover:text-gold transition-colors">Premium Room</h3>
+                            <p class="text-xs text-gray-400 tracking-wider">240 m² • Private Dining • Up to 4 Guests</p>
+                        </div>
+                    </div>
+                    <div class="glass p-6 rounded-b-xl border-t-0 flex justify-between items-end">
+                        <div>
+                            <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-1">From</p>
+                            <p class="font-serif text-2xl text-gold">₹8,999 <span class="text-sm text-white/50 font-sans">/night</span></p>
+                        </div>
+                        <button class="text-xs tracking-[0.2em] uppercase text-white hover:text-gold transition-colors border-b border-transparent hover:border-gold pb-1">
+                            Explore
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Amenities Section -->
+    <section id="amenities" class="py-32 bg-navy-800 relative border-y border-white/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-20 section-header">
+                <div class="max-w-2xl">
+                    <p class="text-gold text-xs tracking-[0.4em] uppercase mb-4">Exclusive Services</p>
+                    <h2 class="font-serif text-4xl md:text-5xl font-light">Curated <span class="italic text-gold">Experiences</span></h2>
+                </div>
+                <p class="text-gray-400 text-sm max-w-sm mt-6 md:mt-0">Every detail thoughtfully designed to elevate your stay beyond the ordinary.</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-16">
+                <div class="text-center group">
+                    <div class="w-16 h-16 mx-auto mb-6 border border-gold/30 rounded-full flex items-center justify-center group-hover:border-gold transition-colors duration-500">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="w-8 h-8 text-gold"><path d="M5 12.55a11 11 0 0114.08 0"></path><path d="M1.42 9a16 16 0 0121.16 0"></path><path d="M8.53 16.11a6 6 0 016.95 0"></path><line x1="12" y1="20" x2="12" y2="20"></line></svg>
+                    </div>
+                    <h4 class="font-serif text-xl mb-2">Free WiFi</h4>
+                </div>
+                <div class="text-center group">
+                    <div class="w-16 h-16 mx-auto mb-6 border border-gold/30 rounded-full flex items-center justify-center group-hover:border-gold transition-colors duration-500">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="w-8 h-8 text-gold"><path d="M12 2v20"></path><path d="M12 22c5.5 0 10-4.5 10-10H2c0 5.5 4.5 10 10 10z"></path></svg>
+                    </div>
+                    <h4 class="font-serif text-xl mb-2">Air Conditioning</h4>
+                </div>
+                <div class="text-center group">
+                    <div class="w-16 h-16 mx-auto mb-6 border border-gold/30 rounded-full flex items-center justify-center group-hover:border-gold transition-colors duration-500">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="w-8 h-8 text-gold"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M4 11V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"></path></svg>
+                    </div>
+                    <h4 class="font-serif text-xl mb-2">Free Parking</h4>
+                </div>
+                <div class="text-center group">
+                    <div class="w-16 h-16 mx-auto mb-6 border border-gold/30 rounded-full flex items-center justify-center group-hover:border-gold transition-colors duration-500">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="w-8 h-8 text-gold"><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/><path d="M4.6 10.5C4.6 11.2 5.8 14 5.8 14H18.2s1.2-2.8 1.2-3.5a7 7 0 1 0-14 0Z"/><path d="M2 20h20"/><path d="M12 4v-1"/></svg>
+                    </div>
+                    <h4 class="font-serif text-xl mb-2">24/7 Front Desk</h4>
+                </div>
+                <div class="text-center group">
+                    <div class="w-16 h-16 mx-auto mb-6 border border-gold/30 rounded-full flex items-center justify-center group-hover:border-gold transition-colors duration-500">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="w-8 h-8 text-gold"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+                    </div>
+                    <h4 class="font-serif text-xl mb-2">Room Service</h4>
+                </div>
+                <div class="text-center group">
+                    <div class="w-16 h-16 mx-auto mb-6 border border-gold/30 rounded-full flex items-center justify-center group-hover:border-gold transition-colors duration-500">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="w-8 h-8 text-gold"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.2-1.1.7L2.5 9l5.5 3.5-3.5 3.5-2.5-.5-1.5 1.5 3 2 2 3 1.5-1.5-.5-2.5 3.5-3.5 3.5 5.5 2.1-1.2c.5-.2.8-.7.7-1.1z"/></svg>
+                    </div>
+                    <h4 class="font-serif text-xl mb-2">Airport Access</h4>
+                </div>
+                <div class="text-center group">
+                    <div class="w-16 h-16 mx-auto mb-6 border border-gold/30 rounded-full flex items-center justify-center group-hover:border-gold transition-colors duration-500">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="w-8 h-8 text-gold"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    </div>
+                    <h4 class="font-serif text-xl mb-2">Family Rooms</h4>
+                </div>
+                <div class="text-center group">
+                    <div class="w-16 h-16 mx-auto mb-6 border border-gold/30 rounded-full flex items-center justify-center group-hover:border-gold transition-colors duration-500">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="w-8 h-8 text-gold"><path d="M12 2l8 8v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10z"></path></svg>
+                    </div>
+                    <h4 class="font-serif text-xl mb-2">Housekeeping</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials / Awards -->
+    <section class="py-32 px-6 relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1542314831-c6a420325142?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-fixed opacity-10"></div>
+        <div class="max-w-4xl mx-auto text-center relative z-10 section-header">
+            <span class="text-6xl text-gold opacity-50 font-serif mb-6 block">"</span>
+            <h3 class="font-serif text-3xl md:text-5xl leading-snug font-light mb-10">
+                An absolutely extraordinary stay. The suite was palatial, the service impeccable. Sky Group has redefined luxury hospitality in Hyderabad.
+            </h3>
+            <p class="text-sm tracking-[0.2em] uppercase text-gold">Rajan Kapoor</p>
+            <p class="text-xs text-gray-400 mt-2">Business Executive</p>
+            
+            <div class="flex justify-center gap-2 mt-8">
+                <span class="w-2 h-2 rounded-full bg-gold"></span>
+                <span class="w-2 h-2 rounded-full bg-white/20"></span>
+                <span class="w-2 h-2 rounded-full bg-white/20"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Masonry -->
+    <section id="gallery" class="py-10 px-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-7xl mx-auto gallery-grid">
+            <div class="col-span-2 row-span-2 aspect-[4/5] md:aspect-auto md:h-full overflow-hidden rounded-lg group relative">
+                <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover img-hover" alt="Lobby">
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <span class="text-gold tracking-[0.2em] uppercase text-sm border border-gold px-6 py-2">View Gallery</span>
+                </div>
+            </div>
+            <div class="aspect-square md:aspect-[4/3] overflow-hidden rounded-lg">
+                <img src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover img-hover" alt="Pool">
+            </div>
+            <div class="aspect-square md:aspect-[4/3] overflow-hidden rounded-lg">
+                <img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover img-hover" alt="Dining">
+            </div>
+            <div class="col-span-2 aspect-[2/1] overflow-hidden rounded-lg">
+                <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover img-hover" alt="Spa">
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-navy-900 pt-32 pb-10 px-6 border-t border-white/5 relative mt-20">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
+                <div class="lg:col-span-1">
+                    <svg width="44" height="52" viewBox="0 0 110 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="mb-6">
+                        <path d="M10 100 L10 68 Q10 18 35 10" stroke="#C8A24D" stroke-width="5" stroke-linecap="round" fill="none"/>
+                        <path d="M26 100 L26 72 Q26 28 42 14" stroke="#C8A24D" stroke-width="5" stroke-linecap="round" fill="none"/>
+                        <path d="M42 100 L42 76 Q42 6 55 4 Q68 6 68 76 L68 100" stroke="#C8A24D" stroke-width="5.5" stroke-linecap="round" fill="none"/>
+                        <path d="M84 100 L84 72 Q84 28 68 14" stroke="#C8A24D" stroke-width="5" stroke-linecap="round" fill="none"/>
+                        <path d="M100 100 L100 68 Q100 18 75 10" stroke="#C8A24D" stroke-width="5" stroke-linecap="round" fill="none"/>
+                    </svg>
+                    <p class="font-serif text-2xl mb-2">Hotel Sky Palace</p>
+                    <p class="text-xs text-gray-400 leading-relaxed max-w-xs">A premium budget luxury and family-friendly stay nestled moments from RGIA, Hyderabad.</p>
+                </div>
+                
+                <div>
+                    <h5 class="text-gold text-[10px] tracking-[0.2em] uppercase mb-6">Contact</h5>
+                    <ul class="space-y-4 text-sm text-gray-300">
+                        <li>Plot No. 140, 141 & 142, Madhuranagar<br>Shamshabad, Hyderabad, Telangana – 501218</li>
+                        <li><a href="tel:+919014333452" class="hover:text-gold transition-colors">+91 9014333452</a></li>
+                        <li><a href="mailto:reservations@skyhotels.in" class="hover:text-gold transition-colors">reservations@skyhotels.in</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="text-gold text-[10px] tracking-[0.2em] uppercase mb-6">Nearby Attractions</h5>
+                    <ul class="space-y-4 text-sm text-gray-300">
+                        <li><a href="#" class="hover:text-gold transition-colors">RGIA Airport</a></li>
+                        <li><a href="#" class="hover:text-gold transition-colors">Charminar</a></li>
+                        <li><a href="#" class="hover:text-gold transition-colors">Ramoji Film City</a></li>
+                        <li><a href="#" class="hover:text-gold transition-colors">Chowmahalla Palace</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="text-gold text-[10px] tracking-[0.2em] uppercase mb-6">Newsletter</h5>
+                    <p class="text-xs text-gray-400 mb-4">Subscribe for exclusive privileges and offers.</p>
+                    <div class="flex border-b border-white/20 pb-2">
+                        <input type="email" placeholder="Email Address" class="bg-transparent w-full outline-none text-sm text-white placeholder:text-gray-600">
+                        <button class="text-gold text-xs tracking-widest uppercase hover:text-white transition-colors">Join</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-xs text-gray-500">© 2026 Hotel Sky Palace. All rights reserved.</p>
+                <div class="flex gap-6 text-xs text-gray-500">
+                    <a href="#" class="hover:text-gold transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-gold transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lenis for smooth scrolling
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+            infinite: false,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // Custom Cursor
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorRing = document.getElementById('cursor-ring');
+        
+        document.addEventListener('mousemove', (e) => {
+            cursorDot.style.left = e.clientX + 'px';
+            cursorDot.style.top = e.clientY + 'px';
+            cursorRing.style.left = e.clientX + 'px';
+            cursorRing.style.top = e.clientY + 'px';
+        });
+
+        document.querySelectorAll('a, button, input, select').forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+        });
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('glass', 'py-4');
+                nav.classList.remove('py-6');
+            } else {
+                nav.classList.remove('glass', 'py-4');
+                nav.classList.add('py-6');
+            }
+        });
+
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Hero Parallax
+        gsap.to('#hero-bg', {
+            yPercent: 30,
+            ease: "none",
+            scrollTrigger: {
+                trigger: "header",
+                start: "top top",
+                end: "bottom top",
+                scrub: true
+            } 
+        });
+
+        // Initial Fade Up
+        gsap.to('.fade-up', {
+            y: 0,
+            opacity: 1,
+            duration: 1.5,
+            stagger: 0.2,
+            ease: "power3.out",
+            delay: 0.2
+        });
+
+        // Section Headers
+        gsap.utils.toArray('.section-header').forEach(header => {
+            gsap.from(header, {
+                scrollTrigger: {
+                    trigger: header,
+                    start: "top 80%",
+                },
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                ease: "power3.out"
+            });
+        });
+
+        // Cards Stagger
+        gsap.from('.card', {
+            scrollTrigger: {
+                trigger: "#rooms",
+                start: "top 70%",
+            },
+            y: 100,
+            opacity: 0,
+            duration: 1,
+            stagger: 0.2,
+            ease: "power3.out"
+        });
+
+        // Gallery Stagger
+        gsap.from('.gallery-grid > div', {
+            scrollTrigger: {
+                trigger: "#gallery",
+                start: "top 70%",
+            },
+            y: 50,
+            opacity: 0,
+            duration: 1,
+            stagger: 0.1,
+            ease: "power3.out"
+        });
+    </script>
+</body>
+</html>
